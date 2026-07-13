@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { motion } from "framer-motion";
 
 function Home() {
   const navigate = useNavigate();
@@ -37,29 +38,30 @@ function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-100 via-white to-purple-100 flex justify-center items-center">
-
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="min-h-screen bg-gradient-to-br from-sky-100 via-white to-purple-100 flex justify-center items-center"
+      >
         <div className="text-center">
-
           <div className="w-24 h-24 rounded-full border-[10px] border-blue-200 border-t-blue-600 animate-spin mx-auto"></div>
 
-          <h1 className="text-3xl font-bold mt-8 text-slate-700">
-            Loading Smart Hospital...
-          </h1>
+          <h1 className="text-3xl font-bold mt-8 text-slate-700">Loading Smart Hospital...</h1>
 
-          <p className="text-gray-500 mt-2">
-            Fetching Live Hospital Data
-          </p>
-
+          <p className="text-gray-500 mt-2">Please wait while we fetch hospitals.</p>
         </div>
-
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-purple-100">
-
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-purple-100"
+    >
       {/* Navbar */}
 
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b shadow-sm">
@@ -206,12 +208,9 @@ function Home() {
 
             <div
               key={hospital._id}
-              onClick={() =>
-                navigate("/checkin?hospital=" + hospital._id)
-              }
-              className="cursor-pointer rounded-[30px] bg-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+              onClick={() => navigate("/checkin?hospital=" + hospital._id)}
+              className="cursor-pointer rounded-[30px] bg-white shadow-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
             >
-
               <div className="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 p-8 text-white">
 
                 <div className="flex justify-between items-center">
@@ -278,12 +277,11 @@ function Home() {
           ))}
 
         </div>
-
       </div>
 
       </main>
 
-    </div>
+    </motion.div>
 
   );
 }
