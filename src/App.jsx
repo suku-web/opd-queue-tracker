@@ -1,9 +1,9 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import PatientCheckIn from './pages/PatientCheckIn'
-import LiveQueue from './pages/LiveQueue'
-import AdminLogin from './pages/AdminLogin'
-import AdminDashboard from './pages/AdminDashboard'
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import PatientCheckIn from "./pages/PatientCheckIn";
+import LiveQueue from "./pages/LiveQueue";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       <Route path="/admin" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
