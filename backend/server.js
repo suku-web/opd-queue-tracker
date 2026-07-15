@@ -1,46 +1,50 @@
-
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '1.1.1.1']); 
-
-
-const dotenv = require('dotenv')
-dotenv.config()
-
-
 const express = require('express')
-const cors    = require('cors')
-const mongoose = require('mongoose')
+const cors = require('cors')
+const dotenv = require('dotenv')
+const http = require('http')
+const { Server } = require('socket.io')
+const connectDB = require('./config/db')
 
-
-if (!process.env.MONGO_URI) {
-  console.error('❌ Error: MONGO_URI is missing from your .env file!')
-} else {
-  mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected ✅'))
-    .catch(err => console.error('MongoDB error ❌:', err.message))
-}
-
-require('./models/Hospital')
-require('./models/CheckIn')
-require('./models/User')
-
+dotenv.config()
+connectDB()
 
 const app = express()
+
 app.use(cors())
 app.use(express.json())
-
 
 app.get('/', (req, res) => {
   res.json({ message: 'OPD Queue Tracker Server Running' })
 })
 
-
-app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/hospitals', require('./routes/hospitalRoutes'))
 app.use('/api', require('./routes/checkInRoutes'))
 
+const server = http.createServer(app)
+
+const io = new Server(server, {
+  cors: {
+    origin: '*'
+  }
+})
+
+app.set('io', io)
+
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id)
+
+  socket.on('join_queue', (roomId) => {
+    socket.join(roomId)
+    console.log(socket.id, 'joined room:', roomId)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id)
+  })
+})
 
 const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
+
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
