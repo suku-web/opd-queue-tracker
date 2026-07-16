@@ -1,110 +1,89 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useParams, useSearchParams } from "react-router-dom";
+import "../theme.css";
+import { IconCross, IconMail, IconLock, IconArrowRight } from "../components/Icons";
 
-function LiveQueue() {
-  const { hospitalId } = useParams();
-  const [searchParams] = useSearchParams();
-
-  const department = searchParams.get("dept") || "General";
-  const tokenNumber = searchParams.get("token") || "7";
-  const estimatedWait = searchParams.get("wait") || "60";
-
-  const peopleAhead = Math.floor(Number(estimatedWait) / 10);
+function AdminLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 flex items-center justify-center p-6"
+      transition={{ duration: 0.35 }}
+      className="min-h-screen font-body flex items-center justify-center p-6"
+      style={{ background: "var(--paper)", color: "var(--ink)" }}
     >
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-md ticket p-9">
+        <div className="text-center mb-8">
+          <span
+            className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4"
+            style={{ background: "var(--teal-deep)", color: "var(--paper)" }}
+          >
+            <IconCross className="w-7 h-7" />
+          </span>
 
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-center text-white">
-
-          <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl mb-5">
-
-            <span className="text-4xl font-black text-blue-700">
-              #{tokenNumber}
-            </span>
-
-          </div>
-
-          <h1 className="text-3xl font-bold">
-            Your Queue Token
+          <h1 className="font-display text-3xl" style={{ color: "var(--ink)" }}>
+            Admin Login
           </h1>
-
-          <p className="text-blue-100 mt-2">
-            {department} • Hospital {hospitalId}
+          <p className="mt-2 text-sm" style={{ color: "var(--ink-soft)" }}>
+            Welcome back. Login to manage hospital queues.
           </p>
-
         </div>
 
-        <div className="p-8">
+        <div className="mb-5">
+          <label className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+            <IconMail className="w-4 h-4" /> Email Address
+          </label>
 
-          <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6"></div>
-
-          <div className="grid grid-cols-2 gap-5">
-
-            <div className="bg-green-50 rounded-2xl p-6 text-center shadow">
-
-              <div className="text-4xl mb-2">👥</div>
-
-              <h2 className="text-3xl font-bold text-green-700">
-                {peopleAhead}
-              </h2>
-
-              <p className="text-gray-500 text-sm mt-2">
-                People Ahead
-              </p>
-
-            </div>
-
-            <div className="bg-orange-50 rounded-2xl p-6 text-center shadow">
-
-              <div className="text-4xl mb-2">⏳</div>
-
-              <h2 className="text-3xl font-bold text-orange-600">
-                ~{estimatedWait} min
-              </h2>
-
-              <p className="text-gray-500 text-sm mt-2">
-                Estimated Wait
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 bg-blue-100 border border-blue-300 rounded-2xl p-5 text-center">
-
-            <h3 className="font-bold text-blue-700 text-lg">
-              Live Queue Status
-            </h3>
-
-            <p className="text-blue-600 mt-2">
-              🔴 Real-time updates will be connected in Week 4.
-            </p>
-
-          </div>
-
-          <div className="mt-6 bg-purple-50 rounded-2xl p-5 text-center">
-
-            <p className="text-gray-700">
-              Please stay near the hospital.
-            </p>
-
-            <p className="text-sm text-gray-500 mt-2">
-              You will be called when your token number appears.
-            </p>
-
-          </div>
-
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border px-4 py-3 bg-white transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+          />
         </div>
 
+        <div className="mb-6">
+          <label className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+            <IconLock className="w-4 h-4" /> Password
+          </label>
+
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border px-4 py-3 bg-white transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+          />
+        </div>
+
+        <button
+          onClick={() => {
+            if (email && password) {
+              navigate("/admin/dashboard");
+            }
+          }}
+          className="w-full inline-flex items-center justify-center gap-2 font-semibold text-lg py-3.5 transition-colors"
+          style={{ background: "var(--ink)", color: "var(--paper)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--coral)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "var(--ink)")}
+        >
+          Login <IconArrowRight className="w-4 h-4" />
+        </button>
+
+        <p className="text-center text-xs font-data tracking-widest uppercase mt-7" style={{ color: "var(--ink-soft)" }}>
+          Smart OPD Queue Tracker &middot; Week 3
+        </p>
       </div>
     </motion.div>
   );
 }
 
-export default LiveQueue;
+export default AdminLogin;

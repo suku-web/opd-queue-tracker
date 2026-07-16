@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import "../theme.css";
+import { IconCross, IconMail, IconLock, IconArrowRight } from "../components/Icons";
 
 function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -9,28 +11,32 @@ function AdminLogin() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-blue-100 via-cyan-50 to-purple-100 flex items-center justify-center p-6"
+      transition={{ duration: 0.35 }}
+      className="min-h-screen font-body flex items-center justify-center p-6"
+      style={{ background: "var(--paper)", color: "var(--ink)" }}
     >
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white">
-
+      <div className="w-full max-w-md ticket p-9">
         <div className="text-center mb-8">
-          <div className="text-6xl mb-3">🏥</div>
+          <span
+            className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4"
+            style={{ background: "var(--teal-deep)", color: "var(--paper)" }}
+          >
+            <IconCross className="w-7 h-7" />
+          </span>
 
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="font-display text-3xl" style={{ color: "var(--ink)" }}>
             Admin Login
           </h1>
-
-          <p className="text-gray-500 mt-2">
-            Welcome back! Login to manage hospital queues.
+          <p className="mt-2 text-sm" style={{ color: "var(--ink-soft)" }}>
+            Welcome back. Login to manage hospital queues.
           </p>
         </div>
 
         <div className="mb-5">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            📧 Email Address
+          <label className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+            <IconMail className="w-4 h-4" /> Email Address
           </label>
 
           <input
@@ -38,13 +44,14 @@ function AdminLogin() {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full border px-4 py-3 bg-white transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           />
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            🔒 Password
+          <label className="flex items-center gap-2 text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+            <IconLock className="w-4 h-4" /> Password
           </label>
 
           <input
@@ -52,7 +59,8 @@ function AdminLogin() {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full border px-4 py-3 bg-white transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           />
         </div>
 
@@ -62,15 +70,17 @@ function AdminLogin() {
               navigate("/admin/dashboard");
             }
           }}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200"
+          className="w-full inline-flex items-center justify-center gap-2 font-semibold text-lg py-3.5 transition-colors"
+          style={{ background: "var(--ink)", color: "var(--paper)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--coral)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "var(--ink)")}
         >
-          Login →
+          Login <IconArrowRight className="w-4 h-4" />
         </button>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Smart OPD Queue Tracker • Week 3
+        <p className="text-center text-xs font-data tracking-widest uppercase mt-7" style={{ color: "var(--ink-soft)" }}>
+          Smart OPD Queue Tracker &middot; Week 3
         </p>
-
       </div>
     </motion.div>
   );

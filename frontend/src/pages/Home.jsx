@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 import { motion } from "framer-motion";
+import "../theme.css";
+import { EcgDivider, PulseLoader } from "../components/Ecg";
+import { IconCross, IconUsers, IconPin, IconArrowRight, IconAmbulance } from "../components/Icons";
 
 function Home() {
   const navigate = useNavigate();
@@ -36,254 +39,211 @@ function Home() {
     0
   );
 
+  // presentational helper: colors a department tag by its wait band — no data is changed
+  const waitBand = (minutes) => {
+    if (minutes > 30) return { color: "var(--coral)", label: "busy" };
+    if (minutes > 15) return { color: "var(--amber)", label: "moderate" };
+    return { color: "var(--mint)", label: "light" };
+  };
+
   if (loading) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="min-h-screen bg-gradient-to-br from-sky-100 via-white to-purple-100 flex justify-center items-center"
+        className="min-h-screen flex justify-center items-center font-body"
+        style={{ background: "var(--paper)" }}
       >
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-full border-[10px] border-blue-200 border-t-blue-600 animate-spin mx-auto"></div>
-
-          <h1 className="text-3xl font-bold mt-8 text-slate-700">Loading Smart Hospital...</h1>
-
-          <p className="text-gray-500 mt-2">Please wait while we fetch hospitals.</p>
-        </div>
+        <PulseLoader label="Reading hospital vitals" />
       </motion.div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-purple-100"
+      transition={{ duration: 0.35 }}
+      className="min-h-screen font-body"
+      style={{ background: "var(--paper)", color: "var(--ink)" }}
     >
       {/* Navbar */}
-
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b shadow-sm">
-
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-5">
-
-          <div>
-
-            <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
-
-              🏥 Smart OPD
-
-            </h1>
-
-            <p className="text-gray-500">
-              Hospital Queue Management
-            </p>
-
+      <header
+        className="sticky top-0 z-50 backdrop-blur-md"
+        style={{ background: "rgba(246,243,236,0.88)", borderBottom: "1px solid var(--line)" }}
+      >
+        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 md:px-8 py-4">
+          <div className="flex items-center gap-3">
+            <span
+              className="w-9 h-9 flex items-center justify-center rounded-sm"
+              style={{ background: "var(--teal)", color: "var(--paper)" }}
+            >
+              <IconCross className="w-5 h-5" />
+            </span>
+            <div>
+              <h1 className="font-display text-2xl leading-none" style={{ color: "var(--ink)" }}>
+                Smart OPD
+              </h1>
+              <p className="font-data text-[10px] tracking-[0.2em] uppercase mt-1" style={{ color: "var(--ink-soft)" }}>
+                Queue Management
+              </p>
+            </div>
           </div>
 
           <button
-
             onClick={() => navigate("/admin")}
-
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-7 py-3 rounded-2xl font-semibold shadow-xl hover:scale-105 transition"
-
+            className="font-body font-semibold text-sm px-5 py-2.5 border transition-colors"
+            style={{ borderColor: "var(--ink)", color: "var(--ink)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--ink)";
+              e.currentTarget.style.color = "var(--paper)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--ink)";
+            }}
           >
-
-            Hospital Admin →
-
+            Hospital Admin &rarr;
           </button>
-
         </div>
-
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 py-10">
-
+      <main className="max-w-6xl mx-auto px-6 md:px-8 py-10">
         {/* Hero */}
+        <div className="grid lg:grid-cols-2 border overflow-hidden" style={{ borderColor: "var(--line)" }}>
+          <div className="p-10 md:p-14" style={{ background: "var(--teal-deep)", color: "var(--paper)" }}>
+            <span className="font-data text-xs tracking-[0.25em] uppercase status-live" style={{ color: "#f0b6ab" }}>
+              Live across {hospitals.length} hospitals
+            </span>
 
-        <div className="rounded-[35px] bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 shadow-2xl overflow-hidden">
+            <h2 className="font-display text-5xl md:text-6xl leading-[1.05] mt-5">
+              Skip the queue.
+              <br />
+              Not the care.
+            </h2>
 
-          <div className="grid lg:grid-cols-2">
+            <p className="mt-6 text-lg leading-7" style={{ color: "#cfe3df" }}>
+              Find a nearby hospital, check today's waiting time by
+              department, and join the queue before you leave home.
+            </p>
 
-            <div className="p-14 text-white">
-
-              <h2 className="text-6xl font-black leading-tight">
-
-                Skip
-                <br />
-                Long Queues.
-
-              </h2>
-
-              <p className="text-blue-100 mt-6 text-xl leading-8">
-
-                Find nearby hospitals,
-                check waiting time,
-                and join the queue online.
-
-              </p>
-
-              <button
-                className="mt-8 bg-white text-blue-700 font-bold px-8 py-4 rounded-2xl shadow-lg hover:scale-105 transition"
-              >
-                Explore Hospitals
-              </button>
-
-            </div>
-
-            <div className="hidden lg:flex justify-center items-center">
-
-              <div className="text-[180px]">
-                🏥
-              </div>
-
-            </div>
-
+            <button
+              className="mt-9 inline-flex items-center gap-2 font-body font-semibold px-7 py-3.5 transition-transform hover:translate-x-1"
+              style={{ background: "var(--coral)", color: "#fff" }}
+            >
+              Explore Hospitals <IconArrowRight className="w-4 h-4" />
+            </button>
           </div>
 
+          <div
+            className="hidden lg:flex flex-col justify-center items-center gap-6 p-10"
+            style={{ background: "var(--paper-2)" }}
+          >
+            <IconAmbulance className="w-20 h-20" style={{ color: "var(--teal)" }} />
+            <div className="w-full max-w-xs">
+              <EcgDivider color="var(--coral)" />
+            </div>
+            <p className="font-data text-xs tracking-widest uppercase text-center" style={{ color: "var(--ink-soft)" }}>
+              Every token, tracked in real time
+            </p>
+          </div>
         </div>
 
         {/* Statistics */}
-
-        <div className="grid md:grid-cols-3 gap-8 mt-10">
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">🏥</div>
-
-            <h3 className="text-4xl font-extrabold text-blue-600">
-              {hospitals.length}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Hospitals
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">🩺</div>
-
-            <h3 className="text-4xl font-extrabold text-green-600">
-              {totalDepartments}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Departments
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">👥</div>
-
-            <h3 className="text-4xl font-extrabold text-purple-600">
-              {totalPatients}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Avg Waiting Score
-            </p>
-          </div>
-        </div>
-
-      <div className="mt-14">
-
-        <div className="flex justify-between items-center mb-8">
-
-          <div>
-
-            <h2 className="text-4xl font-bold text-slate-800">
-              Nearby Hospitals
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Choose the best hospital for your visit.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-
-          {hospitals.map((hospital) => (
-
+        <div className="grid md:grid-cols-3 mt-10 border-t border-l" style={{ borderColor: "var(--line)" }}>
+          {[
+            { icon: <IconCross className="w-6 h-6" />, value: hospitals.length, label: "Hospitals", accent: "var(--teal)" },
+            { icon: <IconUsers className="w-6 h-6" />, value: totalDepartments, label: "Departments", accent: "var(--mint)" },
+            { icon: <IconUsers className="w-6 h-6" />, value: totalPatients, label: "Avg. Waiting Score", accent: "var(--coral)" },
+          ].map((stat, i) => (
             <div
-              key={hospital._id}
-              onClick={() => navigate("/checkin?hospital=" + hospital._id)}
-              className="cursor-pointer rounded-[30px] bg-white shadow-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+              key={i}
+              className="p-8 border-r border-b"
+              style={{ borderColor: "var(--line)", borderLeft: `3px solid ${stat.accent}` }}
             >
-              <div className="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 p-8 text-white">
+              <div style={{ color: stat.accent }}>{stat.icon}</div>
+              <h3 className="font-data text-4xl font-semibold mt-4" style={{ color: "var(--ink)" }}>
+                {stat.value}
+              </h3>
+              <p className="font-data text-xs tracking-[0.2em] uppercase mt-2" style={{ color: "var(--ink-soft)" }}>
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
 
-                <div className="flex justify-between items-center">
+        <div className="mt-16">
+          <div className="flex justify-between items-end mb-3">
+            <div>
+              <h2 className="font-display text-4xl" style={{ color: "var(--ink)" }}>
+                Nearby Hospitals
+              </h2>
+              <p className="mt-2" style={{ color: "var(--ink-soft)" }}>
+                Choose where you'd like to check in.
+              </p>
+            </div>
+          </div>
+          <EcgDivider color="var(--line)" className="mb-10" />
 
-                  <div>
-
-                    <h3 className="text-3xl font-bold">
-                      🏥 {hospital.name}
-                    </h3>
-
-                    <p className="mt-3 text-blue-100">
-                      📍 {hospital.address}
-                    </p>
-
+          <div className="grid lg:grid-cols-2 gap-8">
+            {hospitals.map((hospital) => (
+              <div
+                key={hospital._id}
+                onClick={() => navigate("/checkin?hospital=" + hospital._id)}
+                className="ticket cursor-pointer transition-all duration-200 hover:-translate-y-1 overflow-hidden"
+              >
+                <div className="p-7" style={{ background: "var(--teal-deep)", color: "var(--paper)" }}>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-display text-2xl">{hospital.name}</h3>
+                      <p className="mt-2 flex items-center gap-1.5 text-sm" style={{ color: "#cfe3df" }}>
+                        <IconPin className="w-4 h-4" /> {hospital.address}
+                      </p>
+                    </div>
+                    <IconCross className="w-8 h-8 opacity-70 shrink-0" />
                   </div>
-
-                  <div className="text-6xl">
-                    🚑
-                  </div>
-
                 </div>
 
+                <div className="p-7">
+                  <h4 className="font-data text-xs tracking-[0.2em] uppercase mb-4" style={{ color: "var(--ink-soft)" }}>
+                    Departments
+                  </h4>
+
+                  <div className="flex flex-wrap gap-2.5">
+                    {hospital.departments.map((dept) => {
+                      const band = waitBand(dept.averageServiceMinutes);
+                      return (
+                        <span
+                          key={dept.name}
+                          className="ticket-stub pl-2.5 pr-3 py-1.5 text-xs font-body font-medium"
+                          style={{ borderLeftColor: band.color, color: "var(--ink)" }}
+                        >
+                          {dept.name}
+                          <span className="font-data ml-1.5" style={{ color: "var(--ink-soft)" }}>
+                            {dept.averageServiceMinutes}m
+                          </span>
+                        </span>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    className="w-full mt-8 py-3.5 font-body font-semibold transition-colors"
+                    style={{ background: "var(--ink)", color: "var(--paper)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--coral)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "var(--ink)")}
+                  >
+                    Check In &rarr;
+                  </button>
+                </div>
               </div>
-
-              <div className="p-8">
-
-                <h4 className="font-bold text-lg mb-5">
-                  Departments
-                </h4>
-
-                <div className="flex flex-wrap gap-3">
-                              {hospital.departments.map((dept, index) => {
-                  const colors = [
-                    "bg-green-100 text-green-700",
-                    "bg-blue-100 text-blue-700",
-                    "bg-pink-100 text-pink-700",
-                    "bg-yellow-100 text-yellow-700",
-                    "bg-purple-100 text-purple-700",
-                  ];
-
-                  return (
-                    <span
-                      key={dept.name}
-                      className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                        colors[index % colors.length]
-                      }`}
-                    >
-                      {dept.name} • {dept.averageServiceMinutes} min
-                    </span>
-                  );
-                })}
-              </div>
-
-              <button
-                className="w-full mt-8 py-4 rounded-2xl text-white font-bold text-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-xl"
-              >
-                Check In →
-              </button>
-
-            </div>
-
+            ))}
           </div>
-
-          ))}
-
         </div>
-      </div>
-
       </main>
-
     </motion.div>
-
   );
 }
 
-export default Home;    
+export default Home;

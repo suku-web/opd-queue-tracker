@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import "../theme.css";
+import { IconCross, IconArrowRight, IconCheck, IconPin } from "../components/Icons";
 
 function PatientCheckIn() {
   const navigate = useNavigate();
@@ -36,47 +38,46 @@ function PatientCheckIn() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 flex items-center justify-center p-6"
+      transition={{ duration: 0.35 }}
+      className="min-h-screen font-body flex items-center justify-center p-6"
+      style={{ background: "var(--paper)", color: "var(--ink)" }}
     >
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-lg ticket overflow-hidden">
+        <div className="p-9 text-center" style={{ background: "var(--teal-deep)", color: "var(--paper)" }}>
+          <span
+            className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4"
+            style={{ background: "rgba(255,255,255,0.12)" }}
+          >
+            <IconCross className="w-7 h-7" />
+          </span>
 
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white text-center">
-
-          <div className="text-6xl mb-3">
-            🏥
-          </div>
-
-          <h1 className="text-3xl font-bold">
-            Patient Check-In
-          </h1>
-
-          <p className="text-blue-100 mt-2">
+          <h1 className="font-display text-3xl">Patient Check-In</h1>
+          <p className="mt-2 text-sm" style={{ color: "#cfe3df" }}>
             Join the OPD queue in just a few clicks.
           </p>
-
         </div>
 
         <div className="p-8">
-
           <button
             onClick={() => navigate("/")}
-            className="mb-6 text-blue-600 font-semibold hover:text-blue-800 transition"
+            className="mb-6 font-body font-semibold text-sm transition-colors"
+            style={{ color: "var(--teal)" }}
           >
-            ← Back to Home
+            &larr; Back to Home
           </button>
 
           {hospitalId && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-              <p className="text-blue-700 font-medium">
-                🏥 Hospital ID: {hospitalId}
-              </p>
+            <div className="ticket-stub pl-3 py-2 mb-6 flex items-center gap-2 text-sm" style={{ borderLeftColor: "var(--teal)" }}>
+              <IconPin className="w-4 h-4" style={{ color: "var(--teal)" }} />
+              <span className="font-data" style={{ color: "var(--ink)" }}>
+                Hospital ID: {hospitalId}
+              </span>
             </div>
           )}
 
-          <label className="block font-semibold text-gray-700 mb-2">
+          <label className="block font-body font-semibold text-sm mb-2" style={{ color: "var(--ink)" }}>
             Select Department
           </label>
 
@@ -86,7 +87,8 @@ function PatientCheckIn() {
               setDepartment(e.target.value);
               setError("");
             }}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full font-body px-4 py-3 mb-4 bg-white border transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           >
             <option value="">-- Select Department --</option>
 
@@ -98,34 +100,34 @@ function PatientCheckIn() {
           </select>
 
           {error && (
-            <p className="text-red-600 text-sm mb-4">
+            <p className="text-sm mb-4 font-body" style={{ color: "var(--coral)" }}>
               {error}
             </p>
           )}
 
           <button
             onClick={handleCheckIn}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-all duration-200"
+            className="w-full inline-flex items-center justify-center gap-2 font-body font-semibold text-lg py-3.5 transition-colors"
+            style={{ background: "var(--coral)", color: "#fff" }}
           >
-            Join Queue →
+            Join Queue <IconArrowRight className="w-4 h-4" />
           </button>
 
-          <div className="mt-8 bg-green-50 rounded-xl p-4 border border-green-200">
-
-            <h3 className="font-semibold text-green-700 mb-2">
-              ✔ Benefits
+          <div className="mt-8 border-t pt-6" style={{ borderColor: "var(--line)" }}>
+            <h3 className="font-data text-xs tracking-[0.2em] uppercase mb-3" style={{ color: "var(--ink-soft)" }}>
+              Why check in online
             </h3>
 
-            <ul className="text-sm text-gray-600 space-y-2">
-              <li>• Skip long hospital queues</li>
-              <li>• Live waiting time updates</li>
-              <li>• Faster patient check-in</li>
+            <ul className="text-sm space-y-2.5" style={{ color: "var(--ink)" }}>
+              {["Skip long hospital queues", "Live waiting time updates", "Faster patient check-in"].map((item) => (
+                <li key={item} className="flex items-center gap-2.5">
+                  <IconCheck className="w-4 h-4 shrink-0" style={{ color: "var(--mint)" }} />
+                  {item}
+                </li>
+              ))}
             </ul>
-
           </div>
-
         </div>
-
       </div>
     </motion.div>
   );
