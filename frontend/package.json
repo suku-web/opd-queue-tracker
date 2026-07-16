@@ -14,8 +14,12 @@
     "autoprefixer": "^10.5.2",
     "axios": "^1.18.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "framer-motion": "^12.42.2",
 =======
+=======
+    "framer-motion": "^12.42.2",
+>>>>>>> 74412f2 (Fix frontend routing paths, check-in validation, and resolve console crashes)
     "postcss": "^8.5.17",
 >>>>>>> 7db6135 (feat: updated frontend queue dashboard layout)
     "react": "^19.2.7",
