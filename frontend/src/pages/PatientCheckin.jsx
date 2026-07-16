@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import "../theme.css";
-import { IconCross, IconArrowRight, IconCheck, IconPin } from "../components/Icons";
-
-function PatientCheckIn() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const hospitalId = searchParams.get("hospital") || "";
-=======
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import API from '../api'
@@ -38,7 +26,6 @@ function PatientCheckIn() {
     }
     fetchHospitalDetails()
   }, [id])
->>>>>>> 7db6135 (feat: updated frontend queue dashboard layout)
 
   const [department, setDepartment] = useState("");
   const [error, setError] = useState("");
