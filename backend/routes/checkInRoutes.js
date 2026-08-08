@@ -1,6 +1,7 @@
 const router   = require('express').Router()
 const Hospital = require('../models/Hospital')
 const CheckIn  = require('../models/CheckIn')
+const auth = require('../middleware/auth')
 
 // POST /api/checkin
 router.post('/checkin', async (req, res) => {
@@ -75,7 +76,7 @@ router.get('/queue/:hospitalId/:dept', async (req, res) => {
 })
 
 // PUT /api/checkin/:id/served
-router.put('/checkin/:id/served', async (req, res) => {
+router.put('/checkin/:id/served',auth, async (req, res) => {
   try {
     await CheckIn.findByIdAndUpdate(
       req.params.id,
