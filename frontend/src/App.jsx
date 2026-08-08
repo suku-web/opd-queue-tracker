@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import PatientCheckin from './pages/PatientCheckin'
-import QueueDashboard from './pages/queuedashboard'
+import QueueDashboard from './pages/QueueDashboard'
 
 function App() {
   return (
