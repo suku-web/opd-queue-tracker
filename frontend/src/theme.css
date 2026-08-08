@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --paper: #f6f3ec;
+  --paper-2: #efeae0;
+  --ink: #16261f;
+  --ink-soft: #56645e;
+  --teal: #0f5c56;
+  --teal-deep: #0a403c;
+  --coral: #e8543e;
+  --amber: #de9b3b;
+  --mint: #4f8f76;
+  --line: #d8d2c4;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.font-data {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ---- Ticket card: rectangular, perforated top edge instead of a rounded gradient card ---- */
+.ticket {
+  position: relative;
+  background: #fffdf9;
+  border: 1px solid var(--line);
+}
+
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--line) 0 6px,
+    transparent 6px 13px
+  );
+}
+
+.ticket-stub {
+  border-left: 2px dashed var(--line);
+}
+
+/* ---- Signature motif: ECG / pulse line ---- */
+.ecg-path {
+  stroke-dasharray: 8 5;
+  animation: ecg-flow 2.6s linear infinite;
+}
+
+@keyframes ecg-flow {
+  to {
+    stroke-dashoffset: -260;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-scale 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-scale {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.7);
+    opacity: 0.35;
+  }
+}
+
+.status-live::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  margin-right: 7px;
+  animation: pulse-scale 1.5s ease-in-out infinite;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .ecg-path,
+  .pulse-dot,
+  .status-live::before {
+    animation: none !important;
+  }
+}
+
+/* ---- Focus visibility ---- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
