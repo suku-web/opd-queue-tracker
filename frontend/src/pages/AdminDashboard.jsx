@@ -53,7 +53,7 @@ function AdminDashboard() {
         </h2>
         <EcgDivider color="var(--line)" className="my-6 max-w-xs" />
 
-        <div className="space-y-5">
+        <div className="space-y-5 overflow-x-auto">
           {queues.map((q, i) => {
             const b = band(q.waiting);
             return (
