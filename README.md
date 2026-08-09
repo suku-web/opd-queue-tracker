@@ -1,16 +1,49 @@
-# React + Vite
+# OPD Queue Tracker — Real-Time OPD Wait-Time Prediction
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Real-time OPD wait-time prediction using crowdsourced patient check-ins for government hospitals in India.
 
-Currently, two official plugins are available:
+## 📌 Problem Statement
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Overcrowded Outpatient Departments (OPDs) in government hospitals lead to long, unpredictable waiting hours. OPD Queue Tracker provides live queue updates, estimated wait-time predictions, and real-time synchronization between patients and hospital administrators.
 
-## React Compiler
+## 🚀 Live Application
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend (Vercel):** https://opd-queue-tracker.vercel.app
+- **Backend API (Render):** https://opd-queue-tracker-backend.onrender.com
 
-## Expanding the ESLint configuration
+## 🖼️ Application Screenshots
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![Home Page](docs/home.png)
+![Live Queue](docs/queue.png)
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, Vite, Tailwind CSS, Framer Motion, Socket.io-client
+- **Backend:** Node.js, Express.js, Socket.io, JWT Authentication
+- **Database:** MongoDB Atlas
+- **Hosting:** Vercel (Frontend) + Render (Backend)
+
+## ✨ Key Features
+
+- 🏥 Live queue tracking with real-time updates
+- 📱 QR code patient check-in
+- ⏱️ Wait-time prediction formula
+- 🛡️ Admin dashboard with mark-served functionality
+- 🟢 Colour-coded queue status indicators (Green / Yellow / Red)
+
+## 💻 Local Setup Instructions
+
+```bash
+# Clone the repository
+git clone [https://github.com/suku-web/opd-queue-tracker.git](https://github.com/suku-web/opd-queue-tracker.git)
+
+# Setup Backend
+cd backend
+npm install
+npm start
+
+# Setup Frontend
+cd ../frontend
+npm install
+npm run dev
+```
