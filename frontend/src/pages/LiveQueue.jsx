@@ -1,110 +1,101 @@
-import { motion } from "framer-motion";
-import { useParams, useSearchParams } from "react-router-dom";
+
+import { useEffect, useState } from 'react'
+import { useParams, useSearchParams }
+  from 'react-router-dom'
+import { io } from 'socket.io-client'
+
+const socket = io(
+  import.meta.env.VITE_API_URL || 'http://localhost:5000'
+)
 
 function LiveQueue() {
-  const { hospitalId } = useParams();
-  const [searchParams] = useSearchParams();
+  const { hospitalId }   = useParams()
+  const [searchParams]   = useSearchParams()
+  const department       = searchParams.get('dept') || 'General'
+  const initialToken     = searchParams.get('token') || '?'
+  const initialWait      = searchParams.get('wait')  || '?'
 
-  const department = searchParams.get("dept") || "General";
-  const tokenNumber = searchParams.get("token") || "7";
-  const estimatedWait = searchParams.get("wait") || "60";
+  const [queueCount, setQueueCount] = useState(
+    Number(initialToken) || 0
+  )
+  const [waitTime, setWaitTime]     = useState(
+    Number(initialWait)  || 0
+  )
 
-  const peopleAhead = Math.floor(Number(estimatedWait) / 10);
+  useEffect(() => {
+    console.log('LiveQueue Loaded')
+    const roomId = hospitalId + '_' + department;
+    console.log("joining room:",roomId);
+    socket.emit('join_queue', roomId)
+
+    socket.on('queue_updated', data => {
+      setQueueCount(data.queueCount)
+      setWaitTime(data.estimatedWait)
+    })
+
+    return () => {
+      socket.off('queue_updated')
+    }
+  }, [hospitalId, department])
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 flex items-center justify-center p-6"
-    >
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-gray-50 flex
+                    items-center justify-center p-6">
+      <div className="bg-white rounded-xl border
+                      border-gray-200 shadow-sm p-8
+                      w-full max-w-md text-center">
 
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-center text-white">
-
-          <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl mb-5">
-
-            <span className="text-4xl font-black text-blue-700">
-              #{tokenNumber}
-            </span>
-
-          </div>
-
-          <h1 className="text-3xl font-bold">
-            Your Queue Token
-          </h1>
-
-          <p className="text-blue-100 mt-2">
-            {department} • Hospital {hospitalId}
-          </p>
-
+        <div className="w-20 h-20 bg-blue-100 rounded-full
+                        flex items-center justify-center
+                        mx-auto mb-6">
+          <span className="text-3xl font-bold text-blue-700">
+            #{queueCount}
+          </span>
         </div>
 
-        <div className="p-8">
+        <h1 className="text-2xl font-semibold
+                      text-gray-800 mb-1">
+          Your Token Number
+        </h1>
+        <p className="text-gray-500 text-sm mb-6">
+          {department} · Hospital {hospitalId}
+        </p>
 
-          <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6"></div>
-
-          <div className="grid grid-cols-2 gap-5">
-
-            <div className="bg-green-50 rounded-2xl p-6 text-center shadow">
-
-              <div className="text-4xl mb-2">👥</div>
-
-              <h2 className="text-3xl font-bold text-green-700">
-                {peopleAhead}
-              </h2>
-
-              <p className="text-gray-500 text-sm mt-2">
-                People Ahead
-              </p>
-
-            </div>
-
-            <div className="bg-orange-50 rounded-2xl p-6 text-center shadow">
-
-              <div className="text-4xl mb-2">⏳</div>
-
-              <h2 className="text-3xl font-bold text-orange-600">
-                ~{estimatedWait} min
-              </h2>
-
-              <p className="text-gray-500 text-sm mt-2">
-                Estimated Wait
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 bg-blue-100 border border-blue-300 rounded-2xl p-5 text-center">
-
-            <h3 className="font-bold text-blue-700 text-lg">
-              Live Queue Status
-            </h3>
-
-            <p className="text-blue-600 mt-2">
-              🔴 Real-time updates will be connected in Week 4.
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-gray-50 rounded-lg p-4">
+            <p className="text-3xl font-bold text-gray-800">
+              {Math.max(0, queueCount - 1)}
             </p>
-
-          </div>
-
-          <div className="mt-6 bg-purple-50 rounded-2xl p-5 text-center">
-
-            <p className="text-gray-700">
-              Please stay near the hospital.
+            <p className="text-xs text-gray-500 mt-1">
+              People ahead
             </p>
-
-            <p className="text-sm text-gray-500 mt-2">
-              You will be called when your token number appears.
-            </p>
-
           </div>
-
+          <div className="bg-orange-50 rounded-lg p-4">
+            <p className="text-3xl font-bold text-orange-600">
+              ~{waitTime}m
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Estimated wait
+            </p>
+          </div>
         </div>
 
+        <div className="flex items-center justify-center
+                        gap-2 bg-green-50 border
+                        border-green-200 rounded-lg p-3
+                        text-sm text-green-700">
+          <span className="w-2 h-2 bg-green-500 rounded-full
+                          animate-pulse">
+          </span>
+          Live — updates automatically
+        </div>
+
+        <p className="text-xs text-gray-400 mt-4">
+          Stay in the hospital. You will be called by
+          your token number.
+        </p>
       </div>
-    </motion.div>
-  );
+    </div>
+  )
 }
-
-export default LiveQueue;
+export default LiveQueue
