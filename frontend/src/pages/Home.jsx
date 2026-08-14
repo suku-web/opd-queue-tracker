@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../api";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import API from '../api'
 
 function Home() {
-  const navigate = useNavigate();
-
-  const [hospitals, setHospitals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
+  const [hospitals, setHospitals] = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState('')
 
   useEffect(() => {
     API.get("/api/hospitals")
@@ -21,269 +20,109 @@ function Home() {
       });
   }, []);
 
-  const totalDepartments = hospitals.reduce(
-    (sum, hospital) => sum + hospital.departments.length,
-    0
-  );
-
-  const totalPatients = hospitals.reduce(
-    (sum, hospital) =>
-      sum +
-      hospital.departments.reduce(
-        (s, d) => s + d.averageServiceMinutes,
-        0
-      ),
-    0
-  );
-
   if (loading) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="min-h-screen bg-gradient-to-br from-sky-100 via-white to-purple-100 flex justify-center items-center"
-      >
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-full border-[10px] border-blue-200 border-t-blue-600 animate-spin mx-auto"></div>
+      <div className="flex justify-center items-center min-h-screen bg-slate-950">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
+        <span className="ml-3 text-lg font-medium text-slate-400">Loading Dashboard...</span>
+      </div>
+    )
+  }
 
-          <h1 className="text-3xl font-bold mt-8 text-slate-700">Loading Smart Hospital...</h1>
-
-          <p className="text-gray-500 mt-2">Please wait while we fetch hospitals.</p>
-        </div>
-      </motion.div>
-    );
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto mt-20 p-6 bg-slate-900 border border-red-500/30 rounded-2xl text-center">
+        <p className="text-red-400 font-semibold">{error}</p>
+      </div>
+    )
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-purple-100"
-    >
-      {/* Navbar */}
-
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b shadow-sm">
-
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-5">
-
-          <div>
-
-            <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
-
-              🏥 Smart OPD
-
+    // 🌟 Modern Cyber-Medical Theme Backdrop
+    <div className="min-h-screen bg-slate-950 p-6 sm:p-10 text-slate-100 font-sans">
+      
+      {/* Header Panel */}
+      <div className="max-w-6xl mx-auto mb-10 border-b border-slate-900 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+              <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+              OPD Queue Tracker
             </h1>
-
-            <p className="text-gray-500">
-              Hospital Queue Management
-            </p>
-
           </div>
-
-          <button
-
-            onClick={() => navigate("/admin")}
-
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-7 py-3 rounded-2xl font-semibold shadow-xl hover:scale-105 transition"
-
-          >
-
-            Hospital Admin →
-
-          </button>
-
+          <p className="text-slate-400 mt-2 text-sm font-medium">
+            Real-time capacity tracking across connected regional medical centers.
+          </p>
         </div>
-
-      </header>
-
-      <main className="max-w-7xl mx-auto px-8 py-10">
-
-        {/* Hero */}
-
-        <div className="rounded-[35px] bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 shadow-2xl overflow-hidden">
-
-          <div className="grid lg:grid-cols-2">
-
-            <div className="p-14 text-white">
-
-              <h2 className="text-6xl font-black leading-tight">
-
-                Skip
-                <br />
-                Long Queues.
-
-              </h2>
-
-              <p className="text-blue-100 mt-6 text-xl leading-8">
-
-                Find nearby hospitals,
-                check waiting time,
-                and join the queue online.
-
-              </p>
-
-              <button
-                className="mt-8 bg-white text-blue-700 font-bold px-8 py-4 rounded-2xl shadow-lg hover:scale-105 transition"
-              >
-                Explore Hospitals
-              </button>
-
-            </div>
-
-            <div className="hidden lg:flex justify-center items-center">
-
-              <div className="text-[180px]">
-                🏥
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Statistics */}
-
-        <div className="grid md:grid-cols-3 gap-8 mt-10">
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">🏥</div>
-
-            <h3 className="text-4xl font-extrabold text-blue-600">
-              {hospitals.length}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Hospitals
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">🩺</div>
-
-            <h3 className="text-4xl font-extrabold text-green-600">
-              {totalDepartments}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Departments
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-xl p-8 hover:scale-105 transition-all duration-300">
-            <div className="text-5xl mb-3">👥</div>
-
-            <h3 className="text-4xl font-extrabold text-purple-600">
-              {totalPatients}
-            </h3>
-
-            <p className="text-gray-500 mt-2">
-              Avg Waiting Score
-            </p>
-          </div>
-        </div>
-
-      <div className="mt-14">
-
-        <div className="flex justify-between items-center mb-8">
-
-          <div>
-
-            <h2 className="text-4xl font-bold text-slate-800">
-              Nearby Hospitals
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Choose the best hospital for your visit.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-
-          {hospitals.map((hospital) => (
-
-            <div
-              key={hospital._id}
-              onClick={() => navigate("/checkin?hospital=" + hospital._id)}
-              className="cursor-pointer rounded-[30px] bg-white shadow-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
-            >
-              <div className="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 p-8 text-white">
-
-                <div className="flex justify-between items-center">
-
-                  <div>
-
-                    <h3 className="text-3xl font-bold">
-                      🏥 {hospital.name}
-                    </h3>
-
-                    <p className="mt-3 text-blue-100">
-                      📍 {hospital.address}
-                    </p>
-
-                  </div>
-
-                  <div className="text-6xl">
-                    🚑
-                  </div>
-
-                </div>
-
-              </div>
-
-              <div className="p-8">
-
-                <h4 className="font-bold text-lg mb-5">
-                  Departments
-                </h4>
-
-                <div className="flex flex-wrap gap-3">
-                              {hospital.departments.map((dept, index) => {
-                  const colors = [
-                    "bg-green-100 text-green-700",
-                    "bg-blue-100 text-blue-700",
-                    "bg-pink-100 text-pink-700",
-                    "bg-yellow-100 text-yellow-700",
-                    "bg-purple-100 text-purple-700",
-                  ];
-
-                  return (
-                    <span
-                      key={dept.name}
-                      className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                        colors[index % colors.length]
-                      }`}
-                    >
-                      {dept.name} • {dept.averageServiceMinutes} min
-                    </span>
-                  );
-                })}
-              </div>
-
-              <button
-                className="w-full mt-8 py-4 rounded-2xl text-white font-bold text-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-xl"
-              >
-                Check In →
-              </button>
-
-            </div>
-
-          </div>
-
-          ))}
-
+        
+        {/* Live System Pulse Badge */}
+        <div className="self-start sm:self-center px-4 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-cyan-400 flex items-center space-x-2">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span>SYSTEM LIVE</span>
         </div>
       </div>
 
-      </main>
+      {/* Grid Layout Container */}
+      <div className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {hospitals.map(h => (
+          <div 
+            key={h._id} 
+            className="group bg-slate-900/40 border border-slate-900 rounded-2xl p-6 hover:border-cyan-500/30 hover:bg-slate-900/80 transition-all duration-300 flex flex-col justify-between shadow-xl relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            
+            <div>
+              {/* Card Icon Header Section */}
+              <div className="flex items-start justify-between mb-5 relative z-10">
+                <div className="bg-slate-950 border border-slate-800 text-cyan-400 rounded-xl p-3 inline-flex items-center justify-center shrink-0 shadow-inner group-hover:border-cyan-500/20 transition-colors duration-300">
+                  <svg 
+                    style={{ width: '24px', height: '24px', display: 'block' }} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0V11m0 0h4m-4 0H5m12 0h-4M5 7h14m-9 4v8m4-8v8" />
+                  </svg>
+                </div>
+                
+                <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wide uppercase">
+                  Active
+                </span>
+              </div>
 
-    </motion.div>
+              {/* Data Display Details */}
+              <div className="relative z-10">
+                <h4 className="text-xl font-bold text-white mb-2 tracking-wide group-hover:text-cyan-400 transition-colors duration-200">
+                  {h.name}
+                </h4>
+                <p className="text-slate-400 text-sm flex items-start leading-relaxed font-medium">
+                  <svg style={{ width: '16px', height: '16px', marginRight: '6px', flexShrink: 0, marginTop: '2px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {h.address}
+                </p>
+              </div>
+            </div>
 
-  );
+            {/* Aesthetic Action Button */}
+            <div className="mt-6 pt-4 border-t border-slate-900 relative z-10">
+              <button 
+                onClick={() => navigate(`/hospital/${h._id}`)} // 🚀 FIXED: Router hook added here
+                className="w-full bg-slate-950 hover:bg-cyan-500 text-slate-300 hover:text-slate-950 font-bold py-2.5 px-4 rounded-xl transition-all duration-200 text-sm border border-slate-800 hover:border-cyan-400 shadow-[0_4px_12px_rgba(0,0,0,0.3)] tracking-wide"
+              >
+                Monitor Queue
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
-export default Home;    
+export default Home

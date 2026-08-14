@@ -10,17 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "autoprefixer": "^10.5.2",
     "axios": "^1.18.1",
+    "framer-motion": "^12.42.2",
+    "postcss": "^8.5.17",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
+<<<<<<< HEAD
     "socket.io-client": "^4.8.3"
+=======
+    "socket.io-client": "^4.8.3",
+    "tailwindcss": "^4.3.2"
+>>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "autoprefixer": "^10.5.4",
     "oxlint": "^1.71.0",
+    "postcss": "^8.5.19",
     "vite": "^8.1.1"
   }
 }

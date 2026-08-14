@@ -1,133 +1,113 @@
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 function PatientCheckIn() {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const hospitalId = searchParams.get("hospital") || "";
 
-  const [department, setDepartment] = useState("");
-  const [error, setError] = useState("");
+  const [hospital, setHospital] = useState(null);
+  const [department, setDepartment] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [pageLoading, setPageLoading] = useState(true);
 
-  const departments = [
-    "General",
-    "Cardiology",
-    "Orthopaedics",
-    "Gynaecology",
-    "Paediatrics",
-    "ENT",
-  ];
+  useEffect(() => {
+    const fetchHospitalDetails = async () => {
+      try {
+        const res = await API.get(`/api/hospitals/${id}`);
+        setHospital(res.data);
+      } catch (err) {
+        setError('Could not load hospital data.');
+      } finally {
+        setPageLoading(false);
+      }
+    };
 
-  const handleCheckIn = () => {
+    fetchHospitalDetails();
+  }, [id]);
+
+  const handleCheckIn = async () => {
     if (!department) {
-      setError("Please select a department.");
+      setError('Please select a department.');
       return;
     }
 
-    navigate(
-      "/queue/" +
-        hospitalId +
-        "?dept=" +
-        department +
-        "&token=7&wait=60"
-    );
+    setLoading(true);
+    setError('');
+
+    try {
+      await API.post('/api/checkin', {
+        hospitalId: id,
+        department,
+      });
+
+      navigate(`/queue/${id}?dept=${department}`);
+    } catch (err) {
+      setError('Check-in failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 flex items-center justify-center p-6"
-    >
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
-
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-white text-center">
-
-          <div className="text-6xl mb-3">
-            🏥
-          </div>
-
-          <h1 className="text-3xl font-bold">
-            Patient Check-In
-          </h1>
-
-          <p className="text-blue-100 mt-2">
-            Join the OPD queue in just a few clicks.
-          </p>
-
-        </div>
-
-        <div className="p-8">
-
-          <button
-            onClick={() => navigate("/")}
-            className="mb-6 text-blue-600 font-semibold hover:text-blue-800 transition"
-          >
-            ← Back to Home
-          </button>
-
-          {hospitalId && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-              <p className="text-blue-700 font-medium">
-                🏥 Hospital ID: {hospitalId}
-              </p>
-            </div>
-          )}
-
-          <label className="block font-semibold text-gray-700 mb-2">
-            Select Department
-          </label>
-
-          <select
-            value={department}
-            onChange={(e) => {
-              setDepartment(e.target.value);
-              setError("");
-            }}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">-- Select Department --</option>
-
-            {departments.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
-
-          {error && (
-            <p className="text-red-600 text-sm mb-4">
-              {error}
-            </p>
-          )}
-
-          <button
-            onClick={handleCheckIn}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-all duration-200"
-          >
-            Join Queue →
-          </button>
-
-          <div className="mt-8 bg-green-50 rounded-xl p-4 border border-green-200">
-
-            <h3 className="font-semibold text-green-700 mb-2">
-              ✔ Benefits
-            </h3>
-
-            <ul className="text-sm text-gray-600 space-y-2">
-              <li>• Skip long hospital queues</li>
-              <li>• Live waiting time updates</li>
-              <li>• Faster patient check-in</li>
-            </ul>
-
-          </div>
-
-        </div>
-
+  if (pageLoading) {
+    return (
+      <div className="p-8 min-h-screen bg-slate-950 text-white">
+        Loading hospital options...
       </div>
-    </motion.div>
+    );
+  }
+
+  return (
+    <div className="p-8 min-h-screen bg-slate-950 text-white flex flex-col justify-center items-center">
+      <div className="bg-slate-900 p-6 rounded-lg shadow-xl w-full max-w-md border border-slate-800">
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {hospital?.name || 'Hospital'} Check-In
+        </h2>
+
+        <p className="text-sm text-slate-400 mb-6 text-center">
+          {hospital?.address || 'Location'}
+        </p>
+
+        <label className="block text-sm font-medium text-slate-300 mb-2">
+          Select Department
+        </label>
+
+        <select
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          className="w-full bg-slate-950 border border-slate-700 rounded p-2.5 mb-4 text-white focus:outline-none focus:border-blue-500"
+        >
+          <option value="">-- Choose a Department --</option>
+
+          <option value="General">General Department</option>
+
+          {hospital?.departments?.map((dept, index) => {
+            const deptName = typeof dept === 'string' ? dept : dept.name;
+
+            if (deptName === 'General') return null;
+
+            return (
+              <option key={index} value={deptName}>
+                {deptName}
+              </option>
+            );
+          })}
+        </select>
+
+        {error && (
+          <p className="text-red-500 text-sm mb-4">{error}</p>
+        )}
+
+        <button
+          onClick={handleCheckIn}
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded disabled:opacity-50 transition-all"
+        >
+          {loading ? 'Joining queue...' : 'Join Queue'}
+        </button>
+      </div>
+    </div>
   );
 }
 

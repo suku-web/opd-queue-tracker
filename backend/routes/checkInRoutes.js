@@ -1,7 +1,11 @@
 const router   = require('express').Router()
 const Hospital = require('../models/Hospital')
 const CheckIn  = require('../models/CheckIn')
+<<<<<<< HEAD
 const auth     = require('../middleware/auth')
+=======
+const auth = require('../middleware/auth')
+>>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
 
 // POST /api/checkin
 router.post('/checkin', async (req, res) => {
@@ -98,7 +102,11 @@ router.get('/queue/:hospitalId/:dept', async (req, res) => {
 
 
 // PUT /api/checkin/:id/served
+<<<<<<< HEAD
 router.put('/checkin/:id/served', auth, async (req, res) => {
+=======
+router.put('/checkin/:id/served',auth, async (req, res) => {
+>>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
   try {
 
     // Mark patient as served
