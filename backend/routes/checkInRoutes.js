@@ -1,11 +1,7 @@
-const router   = require('express').Router()
+const router = require('express').Router()
 const Hospital = require('../models/Hospital')
-const CheckIn  = require('../models/CheckIn')
-<<<<<<< HEAD
-const auth     = require('../middleware/auth')
-=======
+const CheckIn = require('../models/CheckIn')
 const auth = require('../middleware/auth')
->>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
 
 // POST /api/checkin
 router.post('/checkin', async (req, res) => {
@@ -56,14 +52,12 @@ router.post('/checkin', async (req, res) => {
       estimatedWait,
       message: `Checked in to ${department}. Your token is #${tokenNumber}.`
     })
-
   } catch (err) {
     res.status(500).json({
       error: err.message
     })
   }
 })
-
 
 // GET /api/queue/:hospitalId/:dept
 router.get('/queue/:hospitalId/:dept', async (req, res) => {
@@ -92,7 +86,6 @@ router.get('/queue/:hospitalId/:dept', async (req, res) => {
       queueCount,
       estimatedWait: queueCount * avgTime
     })
-
   } catch (err) {
     res.status(500).json({
       error: err.message
@@ -100,15 +93,9 @@ router.get('/queue/:hospitalId/:dept', async (req, res) => {
   }
 })
 
-
 // PUT /api/checkin/:id/served
-<<<<<<< HEAD
 router.put('/checkin/:id/served', auth, async (req, res) => {
-=======
-router.put('/checkin/:id/served',auth, async (req, res) => {
->>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
   try {
-
     // Mark patient as served
     const checkIn = await CheckIn.findByIdAndUpdate(
       req.params.id,
@@ -161,13 +148,11 @@ router.put('/checkin/:id/served',auth, async (req, res) => {
       success: true,
       message: 'Marked as served.'
     })
-
   } catch (err) {
     res.status(500).json({
       error: err.message
     })
   }
 })
-
 
 module.exports = router

@@ -18,12 +18,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
-<<<<<<< HEAD
-    "socket.io-client": "^4.8.3"
-=======
     "socket.io-client": "^4.8.3",
     "tailwindcss": "^4.3.2"
->>>>>>> 2ef0391f2163817341cbf271da7e7b0f92ffcfc8
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
